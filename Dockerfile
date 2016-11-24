@@ -37,20 +37,20 @@ RUN tar xvfz dahdi-linux-complete-current.tar.gz \
 	&& make install \
 	&& make config
 
-#RUN cd /usr/src/dahdi-linux-complete-2.11.1+2.11.1 && make all
-#RUN cd /usr/src/dahdi-linux-complete-2.11.1+2.11.1 && make install
-#RUN cd /usr/src/dahdi-linux-complete-2.11.1+2.11.1 && make config
 
 #libpri
-#RUN cd /usr/src && tar xvfz libpri-current.tar.gz
-#RUN cd /usr/src/libpri-1.5.0/ && make && make install
+WORKDIR /tmp/src
+RUN  tar xvfz libpri-current.tar.gz \
+	&& cd libpri-1.5.0 && make \
+	&& make install 
 
 #pjsip
-#RUN cd /usr/src && tar -xjvf pjproject-2.4.tar.bz2
-#RUN cd /usr/src/pjproject-2.4 && ./configure --enable-shared --disable-sound --disable-resample --disable-video --disable-opencore-amr 
-#RUN cd /usr/src/pjproject-2.4 && make dep
-#RUN cd /usr/src/pjproject-2.4 && make
-#RUN cd /usr/src/pjproject-2.4 && make install
+WORKDIR /tmp/src
+RUN tar -xjvf pjproject-2.4.tar.bz2 \
+	&& cd pjproject-2.4 && ./configure --enable-shared --disable-sound --disable-resample --disable-video --disable-opencore-amr \
+	&& make dep \
+	&& make \
+	&& make install 
 
 #asterisk 
 #RUN cd /usr/src && tar xvfz asterisk-13-current.tar.gz

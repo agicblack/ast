@@ -86,16 +86,19 @@ RUN menuselect/menuselect \
 	--enable EXTRA-SOUNDS-EN-SIREN7 \
 	--enable EXTRA-SOUNDS-EN-SIREN14 \
  menuselect.makeopts
-RUN make 
-#	&& cd sterisk-13.13.0/menuselect && make menuselect && cd .. & make menuselect-tree 
-#	&& DEBIAN_FRONTEND=noninteractive echo "y" | contrib/scripts/install_prereq install 
-	#&& ./configure 
-#	&& menuselect.makeopts
+RUN make
+RUn make install 
+RUN make samples && make config 
 
-# Добавляем конфиг supervisor (описание процессов, которые мы хотим видеть запущенными на этом контейнере)
-#DD supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
+#User add 
 
-# Объявляем, какие директории мы будем подключать
-#VOLUME ["/var/www"] 
-# Запускаем supervisor
-#CMD ["/usr/bin/supervisord"] 
+RUN useradd -m asterisk -s /sbin/nologin
+RUN chown asterisk:asterisk /var/run/asterisk
+RUN chown -R asterisk:asterisk /etc/asterisk/
+#RUN chown -R asterisk:asterisk /var/{lib,log,spool}/asterisk
+RUN chown -R asterisk:asterisk /var/lib/asterisk/
+RUN chown -R asterisk:asterisk /var/log/asterisk/
+RUN chown -R asterisk:asterisk /var/spool/asterisk/
+
+# start
+CMD /usr/sbin/asterisk -f -U asterisk -G asterisk -vvvg -c

@@ -8,7 +8,7 @@ RUN apt-get update
 RUN apt-get upgrade -y 
 
 #utils 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget curl mc apt-utils build-essential linux-headers-`uname -r` openssh-server apache2 mysql-server mysql-client bison flex php5 php5-curl php5-cli php5-mysql php-pear php5-gd curl sox libncurses5-dev libssl-dev libmysqlclient-dev mpg123 libxml2-dev libnewt-dev sqlite3 libsqlite3-dev pkg-config automake libtool autoconf git unixodbc-dev uuid uuid-dev libasound2-dev libogg-dev libvorbis-dev libcurl4-openssl-dev libical-dev libneon27-dev libsrtp0-dev libspandsp-dev sudo libmyodbc subversion vim mc autotools-dev libtool-bin python-pyrex make texi2html texinfo
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget curl mc apt-utils build-essential linux-headers-`uname -r` openssh-server apache2 mysql-server mysql-client bison flex php5 php5-curl php5-cli php5-mysql php-pear php5-gd curl sox libncurses5-dev libssl-dev libmysqlclient-dev mpg123 libxml2-dev libnewt-dev sqlite3 libsqlite3-dev pkg-config automake libtool autoconf git unixodbc-dev uuid uuid-dev libasound2-dev libogg-dev libvorbis-dev libcurl4-openssl-dev libical-dev libneon27-dev libsrtp0-dev libspandsp-dev sudo libmyodbc subversion vim mc autotools-dev libtool-bin python-pyrex make texi2html texinfo uuid-dev build-essential libxml2-dev libncurses5-dev libsqlite3-dev libssl-dev libxslt-dev libjansson-dev bash
 
 #pear
 RUN pear install Console_Getopt
@@ -30,7 +30,6 @@ WORKDIR /tmp
 RUN cd /tmp/src && wget http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz && wget http://downloads.asterisk.org/pub/telephony/libpri/libpri-current.tar.gz && wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz && wget -O jansson.tar.gz https://github.com/akheron/jansson/archive/v2.7.tar.gz && wget http://www.pjsip.org/release/2.4/pjproject-2.4.tar.bz2
 
 #dahdi
-RUN apt-get install -y bash
 WORKDIR /tmp/src
 RUN tar xvfz dahdi-linux-complete-current.tar.gz \
 	&& cd /tmp/src/dahdi-linux-complete-2.11.1+2.11.1 && make all \
@@ -54,8 +53,6 @@ RUN tar -xjvf pjproject-2.4.tar.bz2 \
 
 #asterisk 
 WORKDIR /tmp/src
-RUN apt-get update && apt-get install -y uuid-dev build-essential libxml2-dev libncurses5-dev \
-	libsqlite3-dev libssl-dev libxslt-dev libjansson-dev
 RUN  tar xvfz asterisk-13-current.tar.gz \
 	&& cd asterisk-13.13.0 && contrib/scripts/get_mp3_source.sh \
 	&& ./configure 

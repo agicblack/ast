@@ -17,25 +17,26 @@ RUN pear install Console_Getopt
 WORKDIR /tmp
 RUN mkdir src && cd src \
 	&& git clone https://github.com/meduketto/iksemel.git \
-	&& ./autogen.sh \
+	&& cd iksemel && ./autogen.sh \
+	&& ./configure \
 	&& make \
 	&& make install \
 	&& ldconfig
 
-#RUN cd /usr/src && git clone https://github.com/meduketto/iksemel.git
-#RUN cd /usr/src/iksemel && ./autogen.sh
-#RUN cd /usr/src/iksemel && ./configure
-#RUN cd /usr/src/iksemel && make
-#RUN cd /usr/src/iksemel && make install 
-#RUN cd /usr/src/iksemel && ldconfig
 
 #get 
+WORKDIR /tmp
 
-#RUN cd /usr/src && wget http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz && wget http://downloads.asterisk.org/pub/telephony/libpri/libpri-current.tar.gz && wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz && wget -O jansson.tar.gz https://github.com/akheron/jansson/archive/v2.7.tar.gz && wget http://www.pjsip.org/release/2.4/pjproject-2.4.tar.bz2
+RUN cd /tmp/src && wget http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz && wget http://downloads.asterisk.org/pub/telephony/libpri/libpri-current.tar.gz && wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz && wget -O jansson.tar.gz https://github.com/akheron/jansson/archive/v2.7.tar.gz && wget http://www.pjsip.org/release/2.4/pjproject-2.4.tar.bz2
 
 #dahdi
-#RUN apt-get install -y bash
-#RUN cd /usr/src && tar xvfz dahdi-linux-complete-current.tar.gz 
+RUN apt-get install -y bash
+WORKDIR /tmp/src
+RUN tar xvfz dahdi-linux-complete-current.tar.gz \
+	&& cd /tmp/src/dahdi-linux-complete-2.11.1+2.11.1 && make all \
+	&& make install \
+	&& make config
+
 #RUN cd /usr/src/dahdi-linux-complete-2.11.1+2.11.1 && make all
 #RUN cd /usr/src/dahdi-linux-complete-2.11.1+2.11.1 && make install
 #RUN cd /usr/src/dahdi-linux-complete-2.11.1+2.11.1 && make config

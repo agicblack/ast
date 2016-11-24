@@ -53,9 +53,44 @@ RUN tar -xjvf pjproject-2.4.tar.bz2 \
 	&& make install 
 
 #asterisk 
-#RUN cd /usr/src && tar xvfz asterisk-13-current.tar.gz
-#RUN cd /usr/src/asterisk-13.13.0 && contrib/scripts/get_mp3_source.sh
-#RUN cd /usr/src/asterisk-13.13.0 && contrib/scripts/install_prereq install
+WORKDIR /tmp/src
+RUN apt-get update && apt-get install -y uuid-dev build-essential libxml2-dev libncurses5-dev \
+	libsqlite3-dev libssl-dev libxslt-dev libjansson-dev
+RUN  tar xvfz asterisk-13-current.tar.gz \
+	&& cd asterisk-13.13.0 && contrib/scripts/get_mp3_source.sh \
+	&& ./configure 
+
+WORKDIR /tmp/src/asterisk-13.13.0
+RUN make menuselect.makeopts
+RUN menuselect/menuselect \
+	--enable format_mp3 \
+	--enable res_config_mysql \
+	--enable app_mysql \
+	--enable cdr_mysql \ 
+	--enable CORE-SOUNDS-RU-WAV \
+	--enable CORE-SOUNDS-RU-ULAW \ 
+	--enable CORE-SOUNDS-RU-ALAW \ 
+	--enable CORE-SOUNDS-RU-GSM \
+	--enable CORE-SOUNDS-RU-G729 \
+	--enable CORE-SOUNDS-RU-G722 \
+	--enable CORE-SOUNDS-RU-SLN16 \
+	--enable CORE-SOUNDS-RU-SIREN7 \
+	--enable CORE-SOUNDS-RU-SIREN14 \
+	--enable EXTRA-SOUNDS-EN-WAV \
+	--enable EXTRA-SOUNDS-EN-ULAW \
+	--enable EXTRA-SOUNDS-EN-ALAW \
+	--enable EXTRA-SOUNDS-EN-GSM \
+	--enable EXTRA-SOUNDS-EN-G729 \
+	--enable EXTRA-SOUNDS-EN-G722 \
+	--enable EXTRA-SOUNDS-EN-SLN16 \
+	--enable EXTRA-SOUNDS-EN-SIREN7 \
+	--enable EXTRA-SOUNDS-EN-SIREN14 \
+ menuselect.makeopts
+RUN make 
+#	&& cd sterisk-13.13.0/menuselect && make menuselect && cd .. & make menuselect-tree 
+#	&& DEBIAN_FRONTEND=noninteractive echo "y" | contrib/scripts/install_prereq install 
+	#&& ./configure 
+#	&& menuselect.makeopts
 
 # Добавляем конфиг supervisor (описание процессов, которые мы хотим видеть запущенными на этом контейнере)
 #DD supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
